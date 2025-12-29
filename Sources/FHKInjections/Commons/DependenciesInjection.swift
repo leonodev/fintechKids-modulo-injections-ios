@@ -13,7 +13,7 @@ public protocol LanguageManagerProtocol: ObservableObject, Sendable {
     func saveLanguage(_ language: String) async
 }
 
-extension DependenciesInjection {
+public extension DependenciesInjection {
     var languageManager: any LanguageManagerProtocol {
         get { self[(any LanguageManagerProtocol).self] }
         set { self[(any LanguageManagerProtocol).self] = newValue }
