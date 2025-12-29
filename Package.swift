@@ -16,20 +16,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/leonodev/fintechKids-modulo-core-ios.git",
-                 branch: "main"),
-        
-            .package(url: "https://github.com/leonodev/fintechKids-modulo-storage-ios.git",
+        .package(url: "https://github.com/leonodev/fintechKids-modulo-storage-ios.git",
                  branch: "main")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "FHKInjections",
             dependencies: [
-                // Modules Firebase
-                .product(name: "FHKCore", package: "fintechKids-modulo-core-ios"),
+                // Modules FHK
                 .product(name: "FHKStorage", package: "fintechKids-modulo-storage-ios")
             ]
         ),
