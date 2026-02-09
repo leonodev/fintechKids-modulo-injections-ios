@@ -5,6 +5,7 @@ import SwiftUI
 import Combine
 import FHKStorage
 
+public var deps: DependenciesInjection { .shared }
 
 // Store global thread-safe (solo KeyPath)
 public final class DependenciesInjection: @unchecked Sendable {
@@ -134,3 +135,26 @@ func test_cuando_se_guarda_idioma_el_viewmodel_actualiza_el_manager() async {
 
 
 */
+
+
+/*
+ func test_cuando_se_guarda_idioma_el_viewmodel_actualiza_el_manager() async throws {
+     let mock = LanguageManagerMock()
+     
+     // 1. Seguimos usando withOverrides igual que antes
+     try await DependenciesInjection.shared.withOverrides({ injection en
+         // Seteamos el mock en el storage de la instancia shared
+         injection.set(mock, for: (any LanguageManagerProtocol).self)
+     }) {
+         // 2. Al instanciar el ViewModel aquí...
+         let viewModel = ContentViewModel()
+         
+         // 3. Cuando el VM haga: { deps.languageManager }
+         // 'deps' apunta a 'shared', y 'shared' ahora tiene el mock.
+         await viewModel.saveLanguage("it")
+         
+         XCTAssertTrue(mock.saveLanguageCalled)
+         XCTAssertEqual(mock.lastSavedLanguage, "it")
+     }
+ }
+ */
