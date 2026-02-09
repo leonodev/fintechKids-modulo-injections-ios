@@ -5,7 +5,8 @@ import SwiftUI
 import Combine
 import FHKStorage
 
-public var deps: DependenciesInjection { .shared }
+// Constant Global by access clean from Anywhere
+public var inject: DependenciesInjection { .shared }
 
 // Store global thread-safe (solo KeyPath)
 public final class DependenciesInjection: @unchecked Sendable {
