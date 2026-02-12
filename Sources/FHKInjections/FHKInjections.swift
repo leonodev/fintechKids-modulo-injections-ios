@@ -5,19 +5,11 @@ import SwiftUI
 import Combine
 import FHKStorage
 
-////Used in class to Inject
-//public protocol FHKInjectableProtocol: AnyObject, Sendable {}
-//
-//// Constant Global by access clean from Anywhere
-//public var inject: DependenciesInjection { .shared }
-
+//Used in class to Inject
 public protocol FHKInjectableProtocol: AnyObject, Sendable {}
 
-// 2. La extensión mágica
-extension FHKInjectableProtocol {
-    /// Permite acceder a las dependencias directamente desde cualquier objeto inyectable
-    public var inject: DependenciesInjection { .shared }
-}
+// Constant Global by access clean from Anywhere
+public var inject: DependenciesInjection { .shared }
 
 // Store global thread-safe (solo KeyPath)
 public final class DependenciesInjection: @unchecked Sendable {
