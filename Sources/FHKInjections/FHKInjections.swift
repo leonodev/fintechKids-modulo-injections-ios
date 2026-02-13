@@ -8,7 +8,15 @@ import FHKStorage
 //Used in class to Inject
 public protocol FHKInjectableProtocol: AnyObject, Sendable {}
 
-// Constant Global by access clean from Anywhere
+/// Global entry point for the dependency injection container (FHKInjections).
+///
+/// Use this property to resolve service protocols, managers, and repositories
+/// throughout the app in a centralized way.
+///
+/// ### Usage Example:
+/// ```swift
+/// let manager = inject.languageManager
+/// ```
 public var inject: DependenciesInjection { .shared }
 
 // Store global thread-safe (solo KeyPath)
@@ -77,7 +85,18 @@ public func withOverrides<R>(
     }
 }
 
-// Property wrapper
+/// A property wrapper that automates dependency resolution from the `DependenciesInjection` container.
+///
+/// This wrapper simplifies the injection of services, managers, or repositories into your
+/// classes (like ViewModels) by resolving them through a `KeyPath`. It promotes decoupling
+/// and makes the code more testable.
+///
+/// ### Example:
+/// ```swift
+/// final class MyViewModel: ObservableObject {
+///     @Inject(\.storagemanager) var storage: FHKStorageManagerProtocol
+/// }
+/// ```
 @propertyWrapper
 public struct Inject<T: Sendable> {
     private let keyPath: KeyPath<DependenciesInjection, T>
