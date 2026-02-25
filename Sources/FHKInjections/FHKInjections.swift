@@ -2,11 +2,7 @@
 // https://docs.swift.org/swift-book
 
 import SwiftUI
-import Combine
-import FHKStorage
-
-//Used in class to Inject
-public protocol FHKInjectableProtocol: AnyObject, Sendable {}
+import FHKDomain
 
 /// Global entry point for the dependency injection container (FHKInjections).
 ///
