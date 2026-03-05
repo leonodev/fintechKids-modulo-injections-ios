@@ -4,109 +4,204 @@
 import SwiftUI
 import FHKDomain
 
-/// Global entry point for the dependency injection container (FHKInjections).
-///
-/// Use this property to resolve service protocols, managers, and repositories
-/// throughout the app in a centralized way.
-///
-/// ### Usage Example:
-/// ```swift
-/// let manager = inject.languageManager
-/// ```
 public var inject: DependenciesInjection { .shared }
 
-// Store global thread-safe (solo KeyPath)
 public final class DependenciesInjection: @unchecked Sendable {
-public static let shared = DependenciesInjection()
-
-private let lock = NSLock()
-private var storage: [ObjectIdentifier: Any] = [:]
-
-private init() {
-    storage = [:]
-}
-
-// concrete types
-public func get<T>(_ type: T.Type) -> T {
-    lock.lock()
-    defer { lock.unlock() }
+    public static let shared = DependenciesInjection()
     
-    guard let value = storage[ObjectIdentifier(type)] as? T else {
-        fatalError("Dependency is missing \(type)")
+    private let lock = NSLock()
+    private var storage: [ObjectIdentifier: Any] = [:]
+    
+    private init() {
+        storage = [:]
     }
-    return value
-}
-
-public func set<T>(_ value: T, for type: T.Type) {
-    lock.lock()
-    storage[ObjectIdentifier(type)] = value
-    lock.unlock()
-}
-
-// Scope temporal con snapshot/restore (ideal tests/flows)
-public func withOverrides<R>(
-    _ apply: (DependenciesInjection) -> Void,
-    _ body: () throws -> R
-) rethrows -> R {
-    lock.lock()
-    let snapshot = storage
-    lock.unlock()
     
-    apply(self)
     
-    defer {
+    // MARK: - Core Methods (Safe Access)
+    
+    public func get<T>(_ type: T.Type) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        guard let value = storage[ObjectIdentifier(type)] as? T else {
+            fatalError("Dependency missing: \(type)")
+        }
+        return value
+    }
+    
+    public func set<T>(_ value: T, for type: T.Type) {
+        lock.lock()
+        storage[ObjectIdentifier(type)] = value
+        lock.unlock()
+    }
+    
+    // MARK: - Internal Helpers for Swift 6 Async
+    
+    private func getSnapshot() -> [ObjectIdentifier: Any] {
+        lock.lock()
+        defer { lock.unlock() }
+        return storage
+    }
+    
+    private func restoreSnapshot(_ snapshot: [ObjectIdentifier: Any]) {
         lock.lock()
         storage = snapshot
         lock.unlock()
     }
-    return try body()
-}
-
-    // Subscript para acceso con KeyPath (como tenías originalmente)
-    public subscript<T: Sendable>(keyPath: KeyPath<DependenciesInjection, T>, type: T.Type) -> T {
-        get { get(type) }
+    
+    //// Scope temporal con snapshot/restore (ideal tests/flows)
+    public func withOverrides<R>(
+        _ body: () async throws -> R
+    ) async rethrows -> R {
+        let snapshot = getSnapshot()
+        
+        defer {
+            restoreSnapshot(snapshot)
+        }
+        
+        return try await body()
     }
     
-    // Subscript para acceso directo por tipo
-    public subscript<T: Sendable>(_ type: T.Type) -> T {
-        get { get(type) }
-        set { set(newValue, for: type) }
-    }
-    
-    // check if it exists previously
-    public func contains<T>(_ type: T.Type) -> Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        return storage[ObjectIdentifier(type)] != nil
+    /// Acceso mediante KeyPath para @propertyWrapper y para Mocks en tests.
+    /// Ejemplo: inject[\.splashRepository] = mock
+    public subscript<T>(keyPath: KeyPath<DependenciesInjection, T>) -> T {
+        get { self[keyPath: keyPath] }
+        set {
+            // Aquí es donde ocurre la magia:
+            // extraemos el tipo T del KeyPath y lo guardamos
+            set(newValue, for: T.self)
+        }
     }
 }
 
-/// A property wrapper that automates dependency resolution from the `DependenciesInjection` container.
-///
-/// This wrapper simplifies the injection of services, managers, or repositories into your
-/// classes (like ViewModels) by resolving them through a `KeyPath`. It promotes decoupling
-/// and makes the code more testable.
-///
-/// ### Example:
-/// ```swift
-/// final class MyViewModel: ObservableObject {
-///     @Inject(\.storagemanager) var storage: FHKStorageManagerProtocol
-/// }
-/// ```
+
 @propertyWrapper
 public struct Inject<T: Sendable> {
     private let keyPath: KeyPath<DependenciesInjection, T>
-    private let type: T.Type
     
-    public init(_ keyPath: KeyPath<DependenciesInjection, T>, _ type: T.Type = T.self) {
+    public init(_ keyPath: KeyPath<DependenciesInjection, T>) {
         self.keyPath = keyPath
-        self.type = type
     }
     
     public var wrappedValue: T {
-        DependenciesInjection.shared[keyPath, type]
+        // Resolvemos la dependencia a través del singleton
+        DependenciesInjection.shared[keyPath]
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+///// Global entry point for the dependency injection container (FHKInjections).
+/////
+///// Use this property to resolve service protocols, managers, and repositories
+///// throughout the app in a centralized way.
+/////
+///// ### Usage Example:
+///// ```swift
+///// let manager = inject.languageManager
+///// ```
+//public var inject: DependenciesInjection { .shared }
+//
+//// Store global thread-safe (solo KeyPath)
+//public final class DependenciesInjection: @unchecked Sendable {
+//public static let shared = DependenciesInjection()
+//
+//private let lock = NSLock()
+//private var storage: [ObjectIdentifier: Any] = [:]
+//
+//private init() {
+//    storage = [:]
+//}
+//
+//// concrete types
+//public func get<T>(_ type: T.Type) -> T {
+//    lock.lock()
+//    defer { lock.unlock() }
+//    
+//    guard let value = storage[ObjectIdentifier(type)] as? T else {
+//        fatalError("Dependency is missing \(type)")
+//    }
+//    return value
+//}
+//
+//public func set<T>(_ value: T, for type: T.Type) {
+//    lock.lock()
+//    storage[ObjectIdentifier(type)] = value
+//    lock.unlock()
+//}
+//
+//// Scope temporal con snapshot/restore (ideal tests/flows)
+//public func withOverrides<R>(
+//    _ apply: (DependenciesInjection) -> Void,
+//    _ body: () throws -> R
+//) rethrows -> R {
+//    lock.lock()
+//    let snapshot = storage
+//    lock.unlock()
+//    
+//    apply(self)
+//    
+//    defer {
+//        lock.lock()
+//        storage = snapshot
+//        lock.unlock()
+//    }
+//    return try body()
+//}
+//
+//    // Subscript para acceso con KeyPath (como tenías originalmente)
+//    public subscript<T: Sendable>(keyPath: KeyPath<DependenciesInjection, T>, type: T.Type) -> T {
+//        get { get(type) }
+//    }
+//    
+//    // Subscript para acceso directo por tipo
+//    public subscript<T: Sendable>(_ type: T.Type) -> T {
+//        get { get(type) }
+//        set { set(newValue, for: type) }
+//    }
+//    
+//    // check if it exists previously
+//    public func contains<T>(_ type: T.Type) -> Bool {
+//        lock.lock()
+//        defer { lock.unlock() }
+//        return storage[ObjectIdentifier(type)] != nil
+//    }
+//}
+//
+///// A property wrapper that automates dependency resolution from the `DependenciesInjection` container.
+/////
+///// This wrapper simplifies the injection of services, managers, or repositories into your
+///// classes (like ViewModels) by resolving them through a `KeyPath`. It promotes decoupling
+///// and makes the code more testable.
+/////
+///// ### Example:
+///// ```swift
+///// final class MyViewModel: ObservableObject {
+/////     @Inject(\.storagemanager) var storage: FHKStorageManagerProtocol
+///// }
+///// ```
+//@propertyWrapper
+//public struct Inject<T: Sendable> {
+//    private let keyPath: KeyPath<DependenciesInjection, T>
+//    private let type: T.Type
+//    
+//    public init(_ keyPath: KeyPath<DependenciesInjection, T>, _ type: T.Type = T.self) {
+//        self.keyPath = keyPath
+//        self.type = type
+//    }
+//    
+//    public var wrappedValue: T {
+//        DependenciesInjection.shared[keyPath, type]
+//    }
+//}
 
 
 /*

@@ -15,7 +15,11 @@ public protocol LanguageManagerProtocol: ObservableObject, Sendable {
 
 public extension DependenciesInjection {
     var languageManager: any LanguageManagerProtocol {
-        get { self[(any LanguageManagerProtocol).self] }
-        set { self[(any LanguageManagerProtocol).self] = newValue }
+        get { get((any LanguageManagerProtocol).self) }
+        set { set(newValue, for: (any LanguageManagerProtocol).self) }
     }
+//    var languageManager: any LanguageManagerProtocol {
+//        get { self[(any LanguageManagerProtocol).self] }
+//        set { self[(any LanguageManagerProtocol).self] = newValue }
+//    }
 }
