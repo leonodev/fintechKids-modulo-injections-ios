@@ -74,22 +74,8 @@ public final class DependenciesInjection: @unchecked Sendable {
 }
 
 
-//@propertyWrapper
-//public struct Inject<T: Sendable> {
-//    private let keyPath: KeyPath<DependenciesInjection, T>
-//    
-//    public init(_ keyPath: KeyPath<DependenciesInjection, T>) {
-//        self.keyPath = keyPath
-//    }
-//    
-//    public var wrappedValue: T {
-//        // Resolvemos la dependencia a través del singleton
-//        DependenciesInjection.shared[keyPath]
-//    }
-//}
-
 @propertyWrapper
-public struct Inject<T> {
+public struct Inject<T: Sendable> {
     private let keyPath: KeyPath<DependenciesInjection, T>
     
     public init(_ keyPath: KeyPath<DependenciesInjection, T>) {
@@ -97,6 +83,7 @@ public struct Inject<T> {
     }
     
     public var wrappedValue: T {
+        // Resolvemos la dependencia a través del singleton
         DependenciesInjection.shared[keyPath]
     }
 }
