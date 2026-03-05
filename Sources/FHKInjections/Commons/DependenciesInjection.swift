@@ -18,8 +18,4 @@ public extension DependenciesInjection {
         get { get((any LanguageManagerProtocol).self) }
         set { set(newValue, for: (any LanguageManagerProtocol).self) }
     }
-//    var languageManager: any LanguageManagerProtocol {
-//        get { self[(any LanguageManagerProtocol).self] }
-//        set { self[(any LanguageManagerProtocol).self] = newValue }
-//    }
 }

@@ -74,8 +74,22 @@ public final class DependenciesInjection: @unchecked Sendable {
 }
 
 
+//@propertyWrapper
+//public struct Inject<T: Sendable> {
+//    private let keyPath: KeyPath<DependenciesInjection, T>
+//    
+//    public init(_ keyPath: KeyPath<DependenciesInjection, T>) {
+//        self.keyPath = keyPath
+//    }
+//    
+//    public var wrappedValue: T {
+//        // Resolvemos la dependencia a través del singleton
+//        DependenciesInjection.shared[keyPath]
+//    }
+//}
+
 @propertyWrapper
-public struct Inject<T: Sendable> {
+public struct Inject<T> {
     private let keyPath: KeyPath<DependenciesInjection, T>
     
     public init(_ keyPath: KeyPath<DependenciesInjection, T>) {
@@ -83,192 +97,6 @@ public struct Inject<T: Sendable> {
     }
     
     public var wrappedValue: T {
-        // Resolvemos la dependencia a través del singleton
         DependenciesInjection.shared[keyPath]
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-///// Global entry point for the dependency injection container (FHKInjections).
-/////
-///// Use this property to resolve service protocols, managers, and repositories
-///// throughout the app in a centralized way.
-/////
-///// ### Usage Example:
-///// ```swift
-///// let manager = inject.languageManager
-///// ```
-//public var inject: DependenciesInjection { .shared }
-//
-//// Store global thread-safe (solo KeyPath)
-//public final class DependenciesInjection: @unchecked Sendable {
-//public static let shared = DependenciesInjection()
-//
-//private let lock = NSLock()
-//private var storage: [ObjectIdentifier: Any] = [:]
-//
-//private init() {
-//    storage = [:]
-//}
-//
-//// concrete types
-//public func get<T>(_ type: T.Type) -> T {
-//    lock.lock()
-//    defer { lock.unlock() }
-//    
-//    guard let value = storage[ObjectIdentifier(type)] as? T else {
-//        fatalError("Dependency is missing \(type)")
-//    }
-//    return value
-//}
-//
-//public func set<T>(_ value: T, for type: T.Type) {
-//    lock.lock()
-//    storage[ObjectIdentifier(type)] = value
-//    lock.unlock()
-//}
-//
-//// Scope temporal con snapshot/restore (ideal tests/flows)
-//public func withOverrides<R>(
-//    _ apply: (DependenciesInjection) -> Void,
-//    _ body: () throws -> R
-//) rethrows -> R {
-//    lock.lock()
-//    let snapshot = storage
-//    lock.unlock()
-//    
-//    apply(self)
-//    
-//    defer {
-//        lock.lock()
-//        storage = snapshot
-//        lock.unlock()
-//    }
-//    return try body()
-//}
-//
-//    // Subscript para acceso con KeyPath (como tenías originalmente)
-//    public subscript<T: Sendable>(keyPath: KeyPath<DependenciesInjection, T>, type: T.Type) -> T {
-//        get { get(type) }
-//    }
-//    
-//    // Subscript para acceso directo por tipo
-//    public subscript<T: Sendable>(_ type: T.Type) -> T {
-//        get { get(type) }
-//        set { set(newValue, for: type) }
-//    }
-//    
-//    // check if it exists previously
-//    public func contains<T>(_ type: T.Type) -> Bool {
-//        lock.lock()
-//        defer { lock.unlock() }
-//        return storage[ObjectIdentifier(type)] != nil
-//    }
-//}
-//
-///// A property wrapper that automates dependency resolution from the `DependenciesInjection` container.
-/////
-///// This wrapper simplifies the injection of services, managers, or repositories into your
-///// classes (like ViewModels) by resolving them through a `KeyPath`. It promotes decoupling
-///// and makes the code more testable.
-/////
-///// ### Example:
-///// ```swift
-///// final class MyViewModel: ObservableObject {
-/////     @Inject(\.storagemanager) var storage: FHKStorageManagerProtocol
-///// }
-///// ```
-//@propertyWrapper
-//public struct Inject<T: Sendable> {
-//    private let keyPath: KeyPath<DependenciesInjection, T>
-//    private let type: T.Type
-//    
-//    public init(_ keyPath: KeyPath<DependenciesInjection, T>, _ type: T.Type = T.self) {
-//        self.keyPath = keyPath
-//        self.type = type
-//    }
-//    
-//    public var wrappedValue: T {
-//        DependenciesInjection.shared[keyPath, type]
-//    }
-//}
-
-
-/*
-
-EJEMPLO TEST
-
-class LanguageManagerMock: LanguageManagerProtocol {
- // Al ser un Mock, podemos hacer que estas propiedades sean observables para el test
- var selectedLanguage: String = "en"
- var saveLanguageCalled = false
- var lastSavedLanguage: String?
-
- func readLanguage() async {
-     // Simulamos una lectura exitosa
-     self.selectedLanguage = "es"
- }
-
- func saveLanguage(_ language: String) async {
-     saveLanguageCalled = true
-     lastSavedLanguage = language
-     self.selectedLanguage = language
- }
-}
-
-
-
-func test_cuando_se_guarda_idioma_el_viewmodel_actualiza_el_manager() async {
- let mock = LanguageManagerMock()
- 
- // Usamos tu motor robusto para sobreescribir solo durante este bloque
- await Dependencies.shared.withOverrides({ deps in
-     deps.set(mock, for: (any LanguageManagerProtocol).self)
- }) {
-     // Dentro de este bloque, cualquier @Inject(\.languageManager) usará el 'mock'
-     let viewModel = LanguageViewModel()
-     
-     await viewModel.saveLanguage("it")
-     
-     // Verificamos que el ViewModel llamó al método correcto del manager
-     XCTAssertTrue(mock.saveLanguageCalled)
-     XCTAssertEqual(mock.lastSavedLanguage, "it")
- }
- // Fuera de aquí, Dependencies.shared vuelve a tener el LanguageManager real
-}
-
-
-*/
-
-
-/*
- func test_cuando_se_guarda_idioma_el_viewmodel_actualiza_el_manager() async throws {
-     let mock = LanguageManagerMock()
-     
-     // 1. Seguimos usando withOverrides igual que antes
-     try await DependenciesInjection.shared.withOverrides({ injection en
-         // Seteamos el mock en el storage de la instancia shared
-         injection.set(mock, for: (any LanguageManagerProtocol).self)
-     }) {
-         // 2. Al instanciar el ViewModel aquí...
-         let viewModel = ContentViewModel()
-         
-         // 3. Cuando el VM haga: { deps.languageManager }
-         // 'deps' apunta a 'shared', y 'shared' ahora tiene el mock.
-         await viewModel.saveLanguage("it")
-         
-         XCTAssertTrue(mock.saveLanguageCalled)
-         XCTAssertEqual(mock.lastSavedLanguage, "it")
-     }
- }
- */
