@@ -66,8 +66,6 @@ public final class DependenciesInjection: @unchecked Sendable {
     public subscript<T>(keyPath: KeyPath<DependenciesInjection, T>) -> T {
         get { self[keyPath: keyPath] }
         set {
-            // Aquí es donde ocurre la magia:
-            // extraemos el tipo T del KeyPath y lo guardamos
             set(newValue, for: T.self)
         }
     }
@@ -83,7 +81,6 @@ public struct Inject<T: Sendable> {
     }
     
     public var wrappedValue: T {
-        // Resolvemos la dependencia a través del singleton
         DependenciesInjection.shared[keyPath]
     }
 }
