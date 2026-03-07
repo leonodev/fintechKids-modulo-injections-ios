@@ -44,7 +44,7 @@ public extension DependenciesInjection {
         set { set(newValue, for: (any FHKServicesAPIProtocol).self) }
     }
     
-    var fhkSecurityManager: any FHKSecurityProtocol {
+    var fhkSecurity: any FHKSecurityProtocol {
         get { get((any FHKSecurityProtocol).self) }
         set { set(newValue, for: (any FHKSecurityProtocol).self) }
     }
