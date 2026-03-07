@@ -7,7 +7,7 @@
 
 import FHKDomain
 
-var storageManager: any FHKStorageManagerProtocol {
+public var storage: any FHKStorageManagerProtocol {
     get { get((any FHKStorageManagerProtocol).self) }
     set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
 }
