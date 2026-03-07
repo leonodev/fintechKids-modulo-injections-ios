@@ -7,7 +7,11 @@
 
 import FHKDomain
 
-public var fhkStorage: any FHKStorageManagerProtocol {
-    get { get((any FHKStorageManagerProtocol).self) }
-    set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
+public extension DependenciesInjection {
+
+    var fhkStorage: any FHKStorageManagerProtocol {
+        get { get((any FHKStorageManagerProtocol).self) }
+        set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
+    }
 }
+
