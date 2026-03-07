@@ -53,5 +53,10 @@ public extension DependenciesInjection {
         get { get((any FHKModalProtocol).self) }
         set { set(newValue, for: (any FHKModalProtocol).self) }
     }
+    
+    var fhkToast: any FHKToastProtocol {
+        get { get((any FHKToastProtocol).self) }
+        set { set(newValue, for: (any FHKToastProtocol).self) }
+    }
 }
 
