@@ -13,5 +13,10 @@ public extension DependenciesInjection {
         get { get((any FHKStorageManagerProtocol).self) }
         set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
     }
+    
+    var fhkConfiguration: any FHKConfigurationProtocol {
+        get { get((any FHKConfigurationProtocol).self) }
+        set { set(newValue, for: (any FHKConfigurationProtocol).self) }
+    }
 }
 
