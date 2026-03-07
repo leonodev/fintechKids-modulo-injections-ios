@@ -43,4 +43,9 @@ public extension DependenciesInjection {
         get { get((any FHKHomeRepositoryProtocol).self) }
         set { set(newValue, for: (any FHKHomeRepositoryProtocol).self) }
     }
+    
+    var fhkCameraPermission: any FHKPermissionProtocol {
+        get { get((any FHKPermissionProtocol).self) }
+        set { set(newValue, for: (any FHKPermissionProtocol).self) }
+    }
 }
