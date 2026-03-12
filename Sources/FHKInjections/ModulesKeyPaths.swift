@@ -48,4 +48,9 @@ public extension DependenciesInjection {
         get { get((any FHKProfileRepositoryProtocol).self) }
         set { set(newValue, for: (any FHKProfileRepositoryProtocol).self) }
     }
+    
+    var fhkTasksRepository: any TasksRepositoryProtocol {
+        get { get((any TasksRepositoryProtocol).self) }
+        set { set(newValue, for: (any TasksRepositoryProtocol).self) }
+    }
 }
