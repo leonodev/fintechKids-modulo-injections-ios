@@ -78,4 +78,9 @@ public extension DependenciesInjection {
         get { get((any FHKSupabaseBalanceProtocol).self) }
         set { set(newValue, for: (any FHKSupabaseBalanceProtocol).self) }
     }
+    
+    var fhkBalanceRepository: any FHKBalanceRepositoryProtocol {
+        get { get((any FHKBalanceRepositoryProtocol).self) }
+        set { set(newValue, for: (any FHKBalanceRepositoryProtocol).self) }
+    }
 }
