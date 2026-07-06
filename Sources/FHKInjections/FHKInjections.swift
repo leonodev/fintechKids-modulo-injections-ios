@@ -4,6 +4,26 @@
 import SwiftUI
 import FHKDomain
 
+public enum RuntimeEnvironment {
+    case standard
+    case preview
+    case testing
+    
+    public static var current: RuntimeEnvironment {
+        #if DEBUG
+        if NSClassFromString("XCTestCase") != nil {
+            return .testing
+        }
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            return .preview
+        }
+        return .standard
+        #else
+        return .standard
+        #endif
+    }
+}
+
 public var inject: DependenciesInjection { .shared }
 
 public final class DependenciesInjection: @unchecked Sendable {
@@ -16,6 +36,21 @@ public final class DependenciesInjection: @unchecked Sendable {
         storage = [:]
     }
     
+    // Método de registro para los 3 entornos
+    public func register<T>(
+        _ type: T.Type,
+        standard: () -> T,
+        preview: () -> T,
+        testing: () -> T
+    ) {
+        let selectedValue: T
+        switch RuntimeEnvironment.current {
+        case .standard: selectedValue = standard()
+        case .preview:  selectedValue = preview()
+        case .testing:  selectedValue = testing()
+        }
+        set(selectedValue, for: type)
+    }
     
     // MARK: - Core Methods (Safe Access)
     
@@ -34,8 +69,16 @@ public final class DependenciesInjection: @unchecked Sendable {
         lock.unlock()
     }
     
-    // MARK: - Internal Helpers for Swift 6 Async
+    // Nuevos ayudantes para activar la inferencia de tipos automática
+    public func get<T>() -> T {
+        get(T.self)
+    }
     
+    public func set<T>(_ value: T) {
+        set(value, for: T.self)
+    }
+    
+    // MARK: - Internal Helpers for Swift 6 Async
     private func getSnapshot() -> [ObjectIdentifier: Any] {
         lock.lock()
         defer { lock.unlock() }

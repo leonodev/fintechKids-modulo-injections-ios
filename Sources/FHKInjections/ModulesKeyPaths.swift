@@ -9,7 +9,58 @@ import FHKDomain
 
 public extension DependenciesInjection {
     
-    var fhkLanguage: any FHKLanguageManagerProtocol {
+    var fhkLanguage: any FHKLanguageManagerProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkLanguageRepository: any FHKLanguageRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkLoginRepository: any FHKLoginRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSplashRepository: any FHKSplashRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkRegisterRepository: any RegisterRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkRegisterMembersRepository: any FHKRegisterMembersRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSupabaseMembers: any FHKSupabaseMembersProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSupabaseTask: any FHKSupabaseTaskProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSupabaseGoal: any FHKSupabaseGoalProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkHomeRepository: any FHKHomeRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkProfileRepository: any FHKProfileRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkTasksRepository: any FHKTasksRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkGoalsRepository: any FHKGoalRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSupabaseBalance: any FHKSupabaseBalanceProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkBalanceRepository: any FHKBalanceRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkSupabaseRewards: any FHKSupabaseRewardsProtocol
+    { get { get() } set { set(newValue) } }
+    
+    var fhkRewardsRepository: any FHKRewardRepositoryProtocol
+    { get { get() } set { set(newValue) } }
+    
+    /*var fhkLanguage: any FHKLanguageManagerProtocol {
         get { get((any FHKLanguageManagerProtocol).self) }
         set { set(newValue, for: (any FHKLanguageManagerProtocol).self) }
     }
@@ -93,4 +144,6 @@ public extension DependenciesInjection {
         get { get((any FHKRewardRepositoryProtocol).self) }
         set { set(newValue, for: (any FHKRewardRepositoryProtocol).self) }
     }
+    */
 }
+
