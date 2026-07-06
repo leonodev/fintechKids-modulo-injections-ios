@@ -9,6 +9,7 @@ import FHKDomain
 
 public extension DependenciesInjection {
     
+    /*
     var fhkLanguage: any FHKLanguageManagerProtocol
     { get { get() } set { set(newValue) } }
     
@@ -60,7 +61,9 @@ public extension DependenciesInjection {
     var fhkRewardsRepository: any FHKRewardRepositoryProtocol
     { get { get() } set { set(newValue) } }
     
-    /*var fhkLanguage: any FHKLanguageManagerProtocol {
+    */
+    
+    var fhkLanguage: any FHKLanguageManagerProtocol {
         get { get((any FHKLanguageManagerProtocol).self) }
         set { set(newValue, for: (any FHKLanguageManagerProtocol).self) }
     }
@@ -144,6 +147,6 @@ public extension DependenciesInjection {
         get { get((any FHKRewardRepositoryProtocol).self) }
         set { set(newValue, for: (any FHKRewardRepositoryProtocol).self) }
     }
-    */
+    
 }
 

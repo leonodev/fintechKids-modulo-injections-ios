@@ -94,15 +94,15 @@ public final class DependenciesInjection: @unchecked Sendable {
         lock.unlock()
     }
     
-    /// Ayudante para activar la inferencia de tipos automática en los Getters por KeyPath.
-    public func get<T>() -> T {
-        get(T.self)
-    }
-    
-    /// Ayudante para activar la inferencia de tipos automática en los Setters por KeyPath.
-    public func set<T>(_ value: T) {
-        set(value, for: T.self)
-    }
+//    /// Ayudante para activar la inferencia de tipos automática en los Getters por KeyPath.
+//    public func get<T>() -> T {
+//        get(T.self)
+//    }
+//    
+//    /// Ayudante para activar la inferencia de tipos automática en los Setters por KeyPath.
+//    public func set<T>(_ value: T) {
+//        set(value, for: T.self)
+//    }
     
     // MARK: - Internal Helpers for Swift 6 Async
     

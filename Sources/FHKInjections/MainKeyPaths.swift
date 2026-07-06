@@ -8,6 +8,8 @@
 import FHKDomain
 
 public extension DependenciesInjection {
+    
+    /*
     var fhkStorage: any FHKStorageManagerProtocol
     { get { get() } set { set(newValue) } }
     
@@ -41,7 +43,9 @@ public extension DependenciesInjection {
     var fhkSessionManager: any FHKSessionManagerProtocol
     { get { get() } set { set(newValue) } }
     
-   /* var fhkStorage: any FHKStorageManagerProtocol {
+    */
+    
+    var fhkStorage: any FHKStorageManagerProtocol {
         get { get((any FHKStorageManagerProtocol).self) }
         set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
     }
@@ -95,6 +99,6 @@ public extension DependenciesInjection {
         get { get((any FHKSessionManagerProtocol).self) }
         set { set(newValue, for: (any FHKSessionManagerProtocol).self) }
     }
-    */
+    
 }
 
