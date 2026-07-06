@@ -36,7 +36,9 @@ public final class DependenciesInjection: @unchecked Sendable {
         storage = [:]
     }
     
-    // Método de registro para los 3 entornos
+    // MARK: - Registration Methods
+    
+    /// CASE 1: Registra una dependencia diferenciando los tres entornos posibles (App, Previews y Tests).
     public func register<T>(
         _ type: T.Type,
         standard: () -> T,
@@ -49,6 +51,29 @@ public final class DependenciesInjection: @unchecked Sendable {
         case .preview:  selectedValue = preview()
         case .testing:  selectedValue = testing()
         }
+        set(selectedValue, for: type)
+    }
+    
+    /// CASO 2: Registra una dependencia sin UI (usa la versión estándar en App y Previews, pero un Mock en Tests Unitarios).
+    public func register<T>(
+        _ type: T.Type,
+        standard: () -> T,
+        testing: () -> T
+    ) {
+        let selectedValue: T
+        switch RuntimeEnvironment.current {
+        case .standard, .preview: selectedValue = standard()
+        case .testing:            selectedValue = testing()
+        }
+        set(selectedValue, for: type)
+    }
+    
+    /// CASO 3: Registra una dependencia estática (usa exactamente la misma instancia real en absolutamente todos los entornos).
+    public func register<T>(
+        _ type: T.Type,
+        standard: () -> T
+    ) {
+        let selectedValue = standard()
         set(selectedValue, for: type)
     }
     
@@ -69,16 +94,18 @@ public final class DependenciesInjection: @unchecked Sendable {
         lock.unlock()
     }
     
-    // Nuevos ayudantes para activar la inferencia de tipos automática
+    /// Ayudante para activar la inferencia de tipos automática en los Getters por KeyPath.
     public func get<T>() -> T {
         get(T.self)
     }
     
+    /// Ayudante para activar la inferencia de tipos automática en los Setters por KeyPath.
     public func set<T>(_ value: T) {
         set(value, for: T.self)
     }
     
     // MARK: - Internal Helpers for Swift 6 Async
+    
     private func getSnapshot() -> [ObjectIdentifier: Any] {
         lock.lock()
         defer { lock.unlock() }
@@ -91,7 +118,7 @@ public final class DependenciesInjection: @unchecked Sendable {
         lock.unlock()
     }
     
-    //// Scope temporal con snapshot/restore (ideal tests/flows)
+    /// Scope temporal con snapshot/restore (ideal para aislar estados en tests o flujos específicos).
     public func withOverrides<R>(
         _ body: () async throws -> R
     ) async rethrows -> R {
@@ -108,12 +135,9 @@ public final class DependenciesInjection: @unchecked Sendable {
     /// Ejemplo: inject[\.splashRepository] = mock
     public subscript<T>(keyPath: KeyPath<DependenciesInjection, T>) -> T {
         get { self[keyPath: keyPath] }
-        set {
-            set(newValue, for: T.self)
-        }
+        set { set(newValue, for: T.self) }
     }
 }
-
 
 @propertyWrapper
 public struct Inject<T: Sendable> {
