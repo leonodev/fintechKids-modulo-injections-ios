@@ -9,45 +9,9 @@ import FHKDomain
 
 public extension DependenciesInjection {
     
-    /*
-    var fhkStorage: any FHKStorageManagerProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkConfiguration: any FHKConfigurationProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkFirebaseRemoteConfig: any FHKRemoteConfigManagerProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkFirebaseAnalitycs: any FHKAnalyticsProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkSupabase: any FHKAuthProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkServicesAPI: any FHKServicesAPIProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkSecurity: any FHKSecurityProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkModal: any FHKModalProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkToast: any FHKToastProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkCameraPermission: any FHKPermissionProtocol
-    { get { get() } set { set(newValue) } }
-    
-    var fhkSessionManager: any FHKSessionManagerProtocol
-    { get { get() } set { set(newValue) } }
-    
-    */
-    
-    var fhkStorage: any FHKStorageManagerProtocol {
-        get { get((any FHKStorageManagerProtocol).self) }
-        set { set(newValue, for: (any FHKStorageManagerProtocol).self) }
+    var fhkStorage: FHKStorageManager {
+        get { get(FHKStorageManager.self) }
+        set { set(newValue, for: FHKStorageManager.self) }
     }
     
     var fhkConfiguration: any FHKConfigurationProtocol {
