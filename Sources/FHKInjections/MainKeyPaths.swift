@@ -49,9 +49,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: (any FHKModalProtocol).self) }
     }
     
-    var fhkToast: any FHKToastProtocol {
-        get { get((any FHKToastProtocol).self) }
-        set { set(newValue, for: (any FHKToastProtocol).self) }
+    var fhkToast: FHKToast {
+        get { get(FHKToast.self) }
+        set { set(newValue, for: FHKToast.self) }
     }
     
     var fhkCameraPermission: any FHKPermissionProtocol {
