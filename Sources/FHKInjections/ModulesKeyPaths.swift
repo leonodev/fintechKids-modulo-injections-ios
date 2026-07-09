@@ -29,9 +29,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: FHKSplashRepository.self) }
     }
     
-    var fhkRegisterRepository: any RegisterRepositoryProtocol {
-        get { get((any RegisterRepositoryProtocol).self) }
-        set { set(newValue, for: (any RegisterRepositoryProtocol).self) }
+    var fhkRegisterRepository: FHKRegisterRepository {
+        get { get(FHKRegisterRepository.self) }
+        set { set(newValue, for: FHKRegisterRepository.self) }
     }
     
     var fhkRegisterMembersRepository: any FHKRegisterMembersRepositoryProtocol {
