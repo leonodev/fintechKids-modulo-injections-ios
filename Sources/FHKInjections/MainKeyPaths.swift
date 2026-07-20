@@ -24,9 +24,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: FHKRemoteConfig.self) }
     }
     
-    var fhkFirebaseAnalitycs: any FHKAnalyticsProtocol {
-        get { get((any FHKAnalyticsProtocol).self) }
-        set { set(newValue, for: (any FHKAnalyticsProtocol).self) }
+    var fhkFirebaseAnalitycs: FHKAnalytics {
+        get { get(FHKAnalytics.self) }
+        set { set(newValue, for: FHKAnalytics.self) }
     }
     
     var fhkSupabase: any FHKAuthProtocol {
