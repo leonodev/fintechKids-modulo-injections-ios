@@ -14,9 +14,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: FHKStorageManager.self) }
     }
     
-    var fhkConfiguration: any FHKConfigurationProtocol {
-        get { get((any FHKConfigurationProtocol).self) }
-        set { set(newValue, for: (any FHKConfigurationProtocol).self) }
+    var fhkConfiguration: FHKConfiguration {
+        get { get(FHKConfiguration.self) }
+        set { set(newValue, for: FHKConfiguration.self) }
     }
     
     var fhkFirebaseRemoteConfig: any FHKRemoteConfigManagerProtocol {
