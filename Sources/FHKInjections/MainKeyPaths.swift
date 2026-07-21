@@ -59,10 +59,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: (any FHKPermissionProtocol).self) }
     }
     
-    var fhkSessionManager: any FHKSessionManagerProtocol {
-        get { get((any FHKSessionManagerProtocol).self) }
-        set { set(newValue, for: (any FHKSessionManagerProtocol).self) }
+    var fhkSession: FHKSession {
+        get { get(FHKSession.self) }
+        set { set(newValue, for: FHKSession.self) }
     }
-    
 }
 
