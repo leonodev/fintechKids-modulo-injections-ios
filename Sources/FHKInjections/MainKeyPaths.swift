@@ -29,9 +29,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: FHKAnalytics.self) }
     }
     
-    var fhkSupabase: any FHKAuthProtocol {
-        get { get((any FHKAuthProtocol).self) }
-        set { set(newValue, for: (any FHKAuthProtocol).self) }
+    var fhkSupabase: FHKAuth {
+        get { get(FHKAuth.self) }
+        set { set(newValue, for: FHKAuth.self) }
     }
     
     var fhkServicesAPI: FHKServices {
