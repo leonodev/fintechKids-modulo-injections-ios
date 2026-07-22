@@ -14,9 +14,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: FHKLanguage.self) }
     }
     
-    var fhkLanguageRepository: any FHKLanguageRepositoryProtocol {
-        get { get((any FHKLanguageRepositoryProtocol).self) }
-        set { set(newValue, for: (any FHKLanguageRepositoryProtocol).self) }
+    var fhkLanguageRepository: FHKLanguageRepository {
+        get { get(FHKLanguageRepository.self) }
+        set { set(newValue, for: (FHKLanguageRepository).self) }
     }
     
     var fhkLoginRepository: FHKLoginRepository {
