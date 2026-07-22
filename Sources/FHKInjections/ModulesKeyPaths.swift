@@ -9,9 +9,9 @@ import FHKDomain
 
 public extension DependenciesInjection {
 
-    var fhkLanguage: any FHKLanguageManagerProtocol {
-        get { get((any FHKLanguageManagerProtocol).self) }
-        set { set(newValue, for: (any FHKLanguageManagerProtocol).self) }
+    var fhkLanguage: FHKLanguage {
+        get { get(FHKLanguage.self) }
+        set { set(newValue, for: FHKLanguage.self) }
     }
     
     var fhkLanguageRepository: any FHKLanguageRepositoryProtocol {
