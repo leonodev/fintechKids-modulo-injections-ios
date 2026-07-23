@@ -54,9 +54,9 @@ public extension DependenciesInjection {
         set { set(newValue, for: (any FHKSupabaseGoalProtocol).self) }
     }
     
-    var fhkHomeRepository: any FHKHomeRepositoryProtocol {
-        get { get((any FHKHomeRepositoryProtocol).self) }
-        set { set(newValue, for: (any FHKHomeRepositoryProtocol).self) }
+    var fhkHomeRepository: FHKHomeRepository {
+        get { get(FHKHomeRepository.self) }
+        set { set(newValue, for: FHKHomeRepository.self) }
     }
     
     var fhkProfileRepository: any FHKProfileRepositoryProtocol {
